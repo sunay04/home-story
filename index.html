@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>家里的故事中文版 · 纯净迁移版</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#17191f;color:#eee;font:16px/1.6 system-ui,sans-serif}main{max-width:960px;margin:24px auto;padding:0 16px}h1{font-size:24px}#game{width:100%;aspect-ratio:800/550;background:#000}ruffle-player{display:block;width:100%;height:100%}p{color:#bac0cd}a{color:#c5d8ff}button{padding:10px 18px;border:0;border-radius:6px;cursor:pointer}#status{white-space:pre-wrap}
+</style>
+<script src="./ruffle/ruffle.js" defer></script>
+</head>
+<body><main>
+<h1>家里的故事中文版</h1>
+<div id="game"></div>
+<p id="status" role="status">正在准备播放器……</p>
+<button id="restart" type="button">重新加载</button>
+<p>点击物品触发事件。加载后点击两次“开始”，再点击三次游戏界面进入游戏。</p>
+<p>纯净迁移版 · <a href="https://www.justwogames.com/" target="_blank" rel="noopener noreferrer">原作者网站</a> · <a href="https://www.7k7k.com/swf/182368.htm" target="_blank" rel="noopener noreferrer">中文版来源</a></p>
+</main>
+<script>
+let player;
+async function start(){
+ const status=document.getElementById('status');
+ const button=document.getElementById('restart');
+ if(location.protocol==='file:'){status.textContent='请使用 GitHub Pages 网站地址或本地 HTTP 服务器打开本页。';return;}
+ button.disabled=true;
+ try{
+  if(!window.RufflePlayer?.newest)throw new Error('播放器文件未加载');
+  if(player)player.remove();
+  player=window.RufflePlayer.newest().createPlayer();
+  document.getElementById('game').appendChild(player);
+  status.textContent='正在加载游戏……';
+  await player.ruffle().load({url:'./game/game.swf',allowScriptAccess:false});
+  status.textContent='如显示播放按钮，请点击开始。';
+ }catch(error){status.textContent='加载失败：'+error.message;}
+ finally{button.disabled=false;}
+}
+document.getElementById('restart').addEventListener('click',start);
+window.addEventListener('DOMContentLoaded',start);
+</script>
+</body></html>
